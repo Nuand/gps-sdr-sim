@@ -1,8 +1,15 @@
-# GPS-SDR-SIM
+# bladeRF GPS-SDR-SIM
 
 GPS-SDR-SIM generates GPS baseband signal data streams, which can be converted 
-to RF using software-defined radio (SDR) platforms, such as 
-[ADALM-Pluto](https://wiki.analog.com/university/tools/pluto), [bladeRF](http://nuand.com/), [HackRF](https://github.com/mossmann/hackrf/wiki), and [USRP](http://www.ettus.com/).
+to RF using the [bladeRF](http://nuand.com/bladeRF) software-defined radio (SDR).
+
+### libbladeRF
+
+Use the following tutorial links to Install libbladeRF and bladeRF-cli on [Windows](https://github.com/Nuand/bladeRF/wiki/Getting-Started%3A-Windows), [Linux](https://github.com/Nuand/bladeRF/wiki/Getting-Started%3A-Linux), or on [Mac OSX](https://github.com/Nuand/bladeRF/wiki/Getting-started%3A-Mac-OSX).
+
+Pre-build Linux PPA packages exist on [LaunchPad](https://github.com/Nuand/bladeRF/wiki/Getting-Started%3A-Linux#Easy_installation_for_Ubuntu_The_bladeRF_PPA).
+
+Download the appropriate bladeRF FPGA file from the [Nuand FPGA repository](https://nuand.com/fpga.php).
 
 ### Windows build instructions
 
@@ -35,12 +42,9 @@ These files are then used to generate the simulated pseudorange and
 Doppler for the GPS satellites in view. This simulated range data is 
 then used to generate the digitized I/Q samples for the GPS signal.
 
-The bladeRF and ADALM-Pluto command line interface requires I/Q pairs stored as signed 
-16-bit integers, while the hackrf_transfer and gps-sdr-sim-uhd.py
-support signed bytes.
+The bladeRF interface requires I/Q pairs stored as signed 16-bit integers.
 
-HackRF, bladeRF and ADALM-Pluto require 2.6 MHz sample rate, while the USRP2 requires
-2.5 MHz (an even integral decimator of 100 MHz).
+The bladeRF requires 2.6 MHz sample rate.
 
 The simulation start time can be specified if the corresponding set of ephemerides
 is available. Otherwise the first time of ephemeris in the RINEX navigation file
@@ -111,45 +115,6 @@ You can also execute these commands via the `bladeRF-cli` script option as below
 ```
 > bladeRF-cli -s bladerf.script
 ```
-
-#### HackRF:
-
-```
-> hackrf_transfer -t gpssim.bin -f 1575420000 -s 2600000 -a 1 -x 0
-```
-
-#### UHD supported devices (tested with USRP2 only):
-
-```
-> gps-sdr-sim-uhd.py -t gpssim.bin -s 2500000 -x 0
-```
-
-#### LimeSDR (in case of 1 Msps 1-bit file, to get full BaseBand dynamic and low RF power):
-
-```
-> limeplayer -s 1000000 -b 1 -d 2047 -g 0.1 < ../circle.1b.1M.bin
-```
-
-#### ADALM-Pluto (PlutoSDR):
-
-The ADALM-Pluto device is expected to have its network interface up and running and is accessible
-via "pluto.local" by default.
-
-Default settings:
-```
-> plutoplayer -t gpssim.bin
-```
-Set TX attenuation:
-```
-> plutoplayer -t gpssim.bin -a -30.0
-```
-Default -20.0dB. Applicable range 0.0dB to -80.0dB in 0.25dB steps.
-
-Set RF bandwidth:
-```
-> plutoplayer -t gpssim.bin -b 3.0
-```
-Default 3.0MHz. Applicable range 1.0MHz to 5.0MHz.
 
 ### License
 
